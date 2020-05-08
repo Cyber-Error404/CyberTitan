@@ -1,6 +1,6 @@
 # CyberTitan
 
-**Version 1.0.0** - [Change log](CHANGELOG.md)
+**Version 1.0.1** - [Change log](CHANGELOG.md)
 
 ---
 Script for Cyber Titan for team Error 404
