@@ -51,12 +51,26 @@ sudo sed -i '1 s/^/password requisite pam_cracklib.so minlen=8 remember=5 difok=
 
 #Enable firewall
 sudo ufw enable 
+sudo ufw default deny incoming
+sudo ufw default deny outgoing
+sudo ufw allow out 53 # port for dns
+sudo ufw allow out 80,443/tcp # ports for http/s
+sudo ufw allow out 67,68/udp # ports for dhcp
+sudo ufw allow out 123/udp # port for network time (note: NTP isn't a secure protocol)
+sudo ufw reset
+sudo sed -i '/ufw-before-input.*icmp/s/ACCEPT/DROP/g' /etc/ufw/before.rules
 
 #Enable syn cookie protection
 sysctl -n net.ipv4.tcp_syncookies
 
 #Disable IPv6
-echo "net.ipv6.conf.all.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.conf
+sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash ipv6.disable=1"/g' /etc/default/grub
+sudo update-grub
+
+#Enable appAromor
+sudo apt install apparmor-profiles apparmor-utils
+sudo aa-enforce /etc/apparmor.d/*
+
 
 #Disable IP Forwarding
 echo 0 | sudo tee /proc/sys/net/ipv4/ip_forward
@@ -84,6 +98,9 @@ do
   find / -name *.$suffix -type f -delete
 done
 
+#Secure shared memory
+echo "none /run/shm tmpfs defaults,ro 0 0" >> /etc/fstab
+
 #Update
-sudo apt-get update
-sudo apt-get upgrade
+sudo apt update && sudo apt upgrade
+

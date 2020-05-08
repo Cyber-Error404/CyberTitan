@@ -1,5 +1,16 @@
 # Change Log
 
+
+## v1.0.2 - May 8, 2020
+
+Added more features to the script
+
+
+**Added:**
+- Secure shared memory
+- Enable apparmor
+- Disabled any incoming and outcoming files and allowed ports for dns,     http/s, dhcp and network time
+
 ## v1.0.1 - May 8, 2020
 
 Added script
